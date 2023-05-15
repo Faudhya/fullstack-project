@@ -49,4 +49,22 @@ module.exports = {
             });
         }
     },
+    unlike: async (req, res) => {
+        try {
+            await like.destroy({
+                where: {
+                    post_id: req.params.id,
+                    user_id: req.userId,
+                },
+            });
+            res.status(200).json({
+                message: "Post successfully unliked",
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Error unliking post",
+            });
+        }
+    },
 };

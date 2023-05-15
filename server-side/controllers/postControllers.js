@@ -81,8 +81,61 @@ module.exports = {
             `;
             const [results] = await db.sequelize.query(query);
             res.status(200).send({
-                status: "post(s) successfully retrived",
+                message: "post(s) successfully retrived",
                 results,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+    },
+    postDetails: async (req, res) => {
+        try {
+            const query = `SELECT posts.id, users.username, posts.image, posts.caption, posts.createdAt AS created_date, COUNT(likes.id) as likes,
+            COUNT(comments.id) as comments
+            FROM posts
+            JOIN users ON posts.user_id = users.id
+            LEFT JOIN likes ON posts.id = likes.post_id
+            LEFT JOIN comments on posts.id = comments.id
+            WHERE posts.is_active = 1 and posts.id = ${req.params.id}
+            GROUP BY posts.id;
+            `;
+            const [results] = await db.sequelize.query(query);
+            res.status(200).send({
+                message: "post successfully retrived",
+                results,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+    },
+    deletePost: async (req, res) => {
+        try {
+            const result = await post.update(
+                { is_active: 0 },
+                {
+                    where: {
+                        id: req.params.id,
+                    },
+                }
+            );
+            res.status(200).send({
+                message: `post with no id: ${req.params.id} successfully deactivated`,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(400).send(err);
+        }
+    },
+    updatePost: async (req, res) => {
+        try {
+            const result = await post.update(req.body, {
+                where: { id: req.params.id },
+            });
+            res.status(200).send({
+                status: true,
+                message: `post with id no: ${req.params.id} has been updated`,
             });
         } catch (err) {
             console.log(err);

@@ -18,7 +18,7 @@ module.exports = {
                 });
             }
 
-            // Check if the like already exists
+            // mengecek apakah user sudah like postnya
             const existingLike = await like.findOne({
                 where: {
                     post_id: req.params.id,
@@ -32,7 +32,7 @@ module.exports = {
                 });
             }
 
-            // Create the new like record
+            // menambah likes ke database
             const result = await like.create({
                 post_id: req.params.id,
                 user_id: req.userId,

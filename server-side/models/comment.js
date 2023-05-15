@@ -24,10 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     Comment.init(
         {
             text: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(300),
                 allowNull: false,
                 validate: {
-                    len: [300],
+                    len: [1, 300],
                 },
             },
         },

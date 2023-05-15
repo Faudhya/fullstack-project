@@ -70,12 +70,10 @@ module.exports = {
     },
     fetchPosts: async (req, res) => {
         try {
-            const query = `SELECT posts.id, users.username, posts.image, posts.caption, posts.createdAt AS created_date, COUNT(likes.id) as likes,
-            COUNT(comments.id) as comments
+            const query = `SELECT posts.id, users.username, posts.image, posts.caption, posts.createdAt AS created_date, COUNT(likes.id) as likes
             FROM posts
             JOIN users ON posts.user_id = users.id
             LEFT JOIN likes ON posts.id = likes.post_id
-            LEFT JOIN comments on posts.id = comments.id
             WHERE posts.is_active = 1
             GROUP BY posts.id;
             `;
@@ -91,12 +89,10 @@ module.exports = {
     },
     postDetails: async (req, res) => {
         try {
-            const query = `SELECT posts.id, users.username, posts.image, posts.caption, posts.createdAt AS created_date, COUNT(likes.id) as likes,
-            COUNT(comments.id) as comments
+            const query = `SELECT posts.id, users.username, posts.image, posts.caption, posts.createdAt AS created_date, COUNT(likes.id) as likes
             FROM posts
             JOIN users ON posts.user_id = users.id
             LEFT JOIN likes ON posts.id = likes.post_id
-            LEFT JOIN comments on posts.id = comments.id
             WHERE posts.is_active = 1 and posts.id = ${req.params.id}
             GROUP BY posts.id;
             `;

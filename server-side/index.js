@@ -7,17 +7,10 @@ const db = require("./models");
 server.use(express.json());
 server.use(cors());
 
-const {
-    authRouters,
-    merchantRouters,
-    productRouters,
-    transactionRouters,
-} = require("./routers");
+const { authRouters, postRouters } = require("./routers");
 
 server.use("/auth", authRouters);
-server.use("/merchant", merchantRouters);
-server.use("/product", productRouters);
-server.use("/transaction", transactionRouters);
+server.use("/post", postRouters);
 
 server.listen(PORT, () => {
     // db.sequelize.sync({ alter: true });

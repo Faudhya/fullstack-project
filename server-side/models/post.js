@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Product extends Model {
+    class Post extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -9,50 +9,43 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Product.belongsTo(models.Merchant, {
+            Post.belongsTo(models.User, {
                 foreignKey: {
-                    name: "merchant_id",
+                    name: "user_id",
                 },
             });
-            Product.belongsTo(models.Category, {
+            Post.hasMany(models.Like, {
                 foreignKey: {
-                    name: "Category_id",
+                    name: "post_id",
                 },
             });
-            Product.hasMany(models.Transaction_detail, {
+            Post.hasMany(models.Comment, {
                 foreignKey: {
-                    name: "product_id",
+                    name: "post_id",
                 },
             });
         }
     }
-    Product.init(
+    Post.init(
         {
-            name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            description: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            price: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            stock: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             image: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            caption: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            is_active: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
         },
         {
             sequelize,
-            modelName: "Product",
+            modelName: "Post",
         }
     );
-    return Product;
+    return Post;
 };

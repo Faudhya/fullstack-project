@@ -39,7 +39,7 @@ module.exports = {
             let mail = {
                 from: `Admin <randomfactsfaud@gmail.com>`,
                 to: `${email}`,
-                subject: `Verfied your account`,
+                subject: `Verify your account`,
                 html: `
                 <div>
                 <p>Thank you for registering, you need to activate your account,</p>
@@ -93,16 +93,26 @@ module.exports = {
 
             const payload = {
                 id: userExist.id,
-                merchant_status: userExist.mer,
+                is_verified: userExist.is_verified,
             };
+
             const token = jwt.sign(payload, "faud", { expiresIn: "1h" });
 
-            res.status(200).send({
-                status: true,
-                message: "login success",
-                data: userExist,
-                token,
-            });
+            //mengambil id dari bearer token
+            const verifiedUser = jwt.verify(token, "faud");
+            console.log(verifiedUser);
+
+            //pengecekan verifikasi
+            if (!verifiedUser.is_verified) {
+                throw "please verify your account";
+            } else {
+                res.status(200).send({
+                    status: true,
+                    message: "login success",
+                    data: userExist,
+                    token,
+                });
+            }
         } catch (err) {
             console.log(err);
             res.status(400).send(err);

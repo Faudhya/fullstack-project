@@ -27,6 +27,13 @@ module.exports = {
             const salt = await bcrypt.genSalt(10);
             const hashPass = await bcrypt.hash(password, salt);
 
+            const generateVerticationToken = (username) => {
+                let token = jwt.sign({ username }, "faud", {
+                    expiresIn: "9999 years",
+                });
+                return token;
+            };
+
             const result = await user.create({
                 username,
                 email,
@@ -34,7 +41,18 @@ module.exports = {
             });
 
             let payload = { id: result.id };
-            const token = jwt.sign(payload, "faud", { expiresIn: "1h" });
+            let token = jwt.sign(payload, "faud", {
+                expiresIn: "9999 years",
+            });
+
+            await user.update(
+                { verification_token: token },
+                {
+                    where: {
+                        id: result.id,
+                    },
+                }
+            );
 
             let mail = {
                 from: `Admin <randomfactsfaud@gmail.com>`,

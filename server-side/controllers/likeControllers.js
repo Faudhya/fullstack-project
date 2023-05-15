@@ -1,18 +1,14 @@
 const db = require("../models");
-const like = db.like;
+const like = db.Like;
 const post = db.Post;
 
 module.exports = {
     likePost: async (req, res) => {
         try {
-            const { postId } = req.params.id;
-            const { userId } = req.body;
-
-            // Check if the post exists
             const existingPost = await post.findOne({
                 where: {
-                    id: postId,
-                    is_active: true,
+                    id: req.params.id,
+                    is_active: 1,
                 },
             });
 
@@ -25,8 +21,8 @@ module.exports = {
             // Check if the like already exists
             const existingLike = await like.findOne({
                 where: {
-                    post_id: postId,
-                    user_id: userId,
+                    post_id: req.params.id,
+                    user_id: req.userId,
                 },
             });
 
@@ -38,8 +34,8 @@ module.exports = {
 
             // Create the new like record
             const result = await like.create({
-                post_id: postId,
-                user_id: userId,
+                post_id: req.params.id,
+                user_id: req.userId,
             });
 
             res.status(200).json({

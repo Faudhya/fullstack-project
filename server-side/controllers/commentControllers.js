@@ -27,7 +27,7 @@ module.exports = {
             });
 
             res.status(200).json({
-                message: "Post commented successfully",
+                message: "Post successfully commented",
                 result,
             });
         } catch (err) {
@@ -39,14 +39,17 @@ module.exports = {
     },
     fetchCommentsFromPost: async (req, res) => {
         try {
-            const result = await comment.findAll({
-                where: {
-                    post_id: req.params.id,
-                },
-            });
+            const query = `SELECT comments.id AS comment_id, comments.text, comments.createdAt as comment_date,
+            comments.post_id,  users.id, users.username
+            FROM comments
+            INNER JOIN users ON comments.user_id = users.id
+            WHERE comments.post_id = ${req.params.id};
+            `;
+            const [results] = await db.sequelize.query(query);
+
             res.status(200).json({
                 message: "Comment(s) retrived successfully",
-                result,
+                results,
             });
         } catch (err) {
             console.log(err);

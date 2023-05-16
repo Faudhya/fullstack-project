@@ -12,12 +12,14 @@ const {
     postRouters,
     likeRouters,
     commentRouters,
+    profileRouters,
 } = require("./routers");
 
 server.use("/auth", authRouters);
 server.use("/post", postRouters);
 server.use("/like", likeRouters);
 server.use("/comment", commentRouters);
+server.use("/profile", profileRouters);
 
 server.listen(PORT, () => {
     // db.sequelize.sync({ alter: true });
